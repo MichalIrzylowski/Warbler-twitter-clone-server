@@ -6,7 +6,8 @@ const express = require("express"),
       
 const errorHandler = require("./handlers/error"),
       authRoutes = require("./routes/auth"),
-      messagesRoutes = require("./routes/messages");
+      messagesRoutes = require("./routes/messages"),
+      {loginRequired, ensureCorrectUser} = require("./middleware/auth");
       
 const PORT = 8081;
 
@@ -16,7 +17,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api/auth', authRoutes);
-app.use('/api/users/:id/messages', messagesRoutes);
+app.use('/api/users/:id/messages',
+        loginRequired,
+        ensureCorrectUser,
+        messagesRoutes);
+
+app.get('/api/messages', loginRequired, async function (req, res, next) {
+  try {
+    let messages = await db.Message.find().sort({createdAt: 'desc'}).populate('user', {
+      username: true,
+      profileImgUrl: true
+    });
+    return res.status(200).json(messages)
+  } catch (err) {
+    return next(err);
+  }
+});
 
 app.use(function (req, res, next) {
   let err = new Error('Not found!');
