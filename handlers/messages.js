@@ -3,6 +3,7 @@ const db = require("../models");
 // api/users/:id/messages
 exports.createMessage = async function (req, res, next) {
   try {
+    console.log(req.body)
     let message = await db.Message.create({
       text: req.body.text,
       user: req.params.id

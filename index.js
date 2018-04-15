@@ -5,7 +5,8 @@ const express = require("express"),
       bodyParser = require("body-parser");
       
 const errorHandler = require("./handlers/error"),
-      authRoutes = require("./routes/auth");
+      authRoutes = require("./routes/auth"),
+      messagesRoutes = require("./routes/messages");
       
 const PORT = 8081;
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/users/:id/messages', messagesRoutes);
 
 app.use(function (req, res, next) {
   let err = new Error('Not found!');
