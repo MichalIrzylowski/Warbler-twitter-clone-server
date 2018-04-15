@@ -14,6 +14,21 @@ const messageSchema = new mongoose.Schema({
   }
 });
 
+messageSchema.pre('remove', async function (next) {
+  try {
+    //find a user
+    let user = await User.findById(this.user);
+    //remove message form their messages list
+    user.messages.remove(this.id);
+    //save user
+    await user.save();
+    //return next
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 const Message = mongoose.model('Message', messageSchema);
 
 module.exports = Message;
