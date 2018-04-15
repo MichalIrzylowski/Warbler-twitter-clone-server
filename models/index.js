@@ -4,6 +4,7 @@ mongoose.Promise = Promise;
 
 mongoose.connect('mongodb://localhost/warbler', {
   keepAlive: true,
-  useMongoClient: true
   //debuging stuff
 });
+
+module.exports.User = require("./user");
