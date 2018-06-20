@@ -3,7 +3,6 @@ const db = require("../models");
 // api/users/:id/messages
 exports.createMessage = async function (req, res, next) {
   try {
-    console.log(req.body)
     let message = await db.Message.create({
       text: req.body.text,
       user: req.params.id
@@ -15,6 +14,7 @@ exports.createMessage = async function (req, res, next) {
       username: true,
       profileImgUrl: true
     });
+    console.log(foundMessage);
     return res.status(200).json(foundMessage);
   } catch (err) {
     return next(err);
@@ -32,9 +32,9 @@ exports.getMessage = async function (req, res, next) {
 
 exports.deleteMessage = async function (req, res, next) {
   try {
-    let foundMessage = db.Message.findById(req.params.message._id);
+    let foundMessage = db.Message.findById(req.params.message_id);
     await foundMessage.remove();
-    return res.status(200).json(foundMessage);
+    return res.status(200).json();
   } catch (err) {
     return next(err);
   }

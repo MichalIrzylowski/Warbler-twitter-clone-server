@@ -7,14 +7,15 @@ const express = require("express"),
 const errorHandler = require("./handlers/error"),
       authRoutes = require("./routes/auth"),
       messagesRoutes = require("./routes/messages"),
-      {loginRequired, ensureCorrectUser} = require("./middleware/auth");
+      {loginRequired, ensureCorrectUser} = require("./middleware/auth"),
+      db = require("./models");
       
 const PORT = 8081;
 
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+//app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users/:id/messages',
@@ -28,7 +29,7 @@ app.get('/api/messages', loginRequired, async function (req, res, next) {
       username: true,
       profileImgUrl: true
     });
-    return res.status(200).json(messages)
+    return res.status(200).json(messages);
   } catch (err) {
     return next(err);
   }
